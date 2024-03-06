@@ -2,7 +2,12 @@ import React from 'react'
 
 const Join = () => {
   return (
-    <div>Join Page</div>
+    <div>
+        <h1>Join Room</h1>
+        <div>
+            <input type="text" placeholder='' />
+        </div>
+    </div>
   )
 }
 
