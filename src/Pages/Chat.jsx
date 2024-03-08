@@ -11,6 +11,7 @@ const Chat = () => {
     const [ room, setRoom ] = useState('')
     const [ currentMessage, setCurrentMessage ] = useState('')
     const [ messagesList, setMessageList ] = useState([]);
+    const [ joinedMessage, setJoinedMessage ] = useState(null);
 
     const joinRoom = () => {
         if (pseudoname !== "" && room !== "") {
@@ -35,9 +36,10 @@ const Chat = () => {
         socket.on('recieve_message', (data) => {
             setMessageList((list) => [...list, data])
         })
+        socket.on('user_joined', (pseudoname) => {
+            setJoinedMessage(`${pseudoname} joined`)
+        })
     }, [socket])
-
-    console.log("list", messagesList);
 
 
     return (
@@ -57,6 +59,7 @@ const Chat = () => {
                                 <h1 key={index}>{m.message} </h1>
                             )
                         })}
+                        {joinedMessage ? <h1>{joinedMessage}</h1> : ''}
                     </div>
                     <div>
                         <input type="text" placeholder='chat...' className='w-64 py-2 m-auto mt-4 mr-3' value={currentMessage} onChange={(e) => setCurrentMessage(e.target.value)} />
