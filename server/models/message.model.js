@@ -6,7 +6,7 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    autor: {
+    author: {
         type: String,
         required: true
     },

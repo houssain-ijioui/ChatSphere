@@ -13,6 +13,12 @@ const Chat = () => {
     const [ messagesList, setMessageList ] = useState([]);
     const [ joinedMessage, setJoinedMessage ] = useState(null);
 
+    const getMessages = async () => {
+        const res = await fetch('http://localhost:4000/api/messages')
+        const data = await res.json()
+        setMessageList(data)
+    }
+
     const joinRoom = () => {
         if (pseudoname !== "" && room !== "") {
             const data = {room, pseudoname}
@@ -25,21 +31,26 @@ const Chat = () => {
         if (currentMessage !== "") {
             const messageData = {
                 message: currentMessage,
-                room
+                room,
+                pseudoname
             }
             await socket.emit('send_message', messageData)
             setMessageList((list) => [...list, messageData])
+            setCurrentMessage('')
         }
     }
 
     useEffect(() => {
+        if (joined) {
+            getMessages()
+        }
         socket.on('recieve_message', (data) => {
             setMessageList((list) => [...list, data])
         })
         socket.on('user_joined', (pseudoname) => {
             setJoinedMessage(`${pseudoname} joined`)
         })
-    }, [socket])
+    }, [socket, joined])
 
 
     return (
@@ -54,12 +65,12 @@ const Chat = () => {
                 <div className='bg-slate-400 w-5/12 h-96 m-auto mt-20 flex flex-col items-center'>
                     <h1>Room: {room}</h1>
                     <div>
+                        {joinedMessage ? <h1>{joinedMessage}</h1> : ''}
                         {messagesList.map((m, index) => {
                             return (
                                 <h1 key={index}>{m.message} </h1>
                             )
                         })}
-                        {joinedMessage ? <h1>{joinedMessage}</h1> : ''}
                     </div>
                     <div>
                         <input type="text" placeholder='chat...' className='w-64 py-2 m-auto mt-4 mr-3' value={currentMessage} onChange={(e) => setCurrentMessage(e.target.value)} />
