@@ -1,6 +1,12 @@
+import { config } from "dotenv";
+config();
 import express from "express";
 const app = express();
 import { Server } from "socket.io";
+import mongoose from "mongoose";
+
+
+mongoose.connect(process.env.DB, console.log("DB Connected"));
 
 
 const server = app.listen(4000, () => {
