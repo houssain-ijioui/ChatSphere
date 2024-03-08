@@ -2,7 +2,6 @@ import './App.css';
 import { Routes, Route } from 'react-router-dom';
 import Chat from './Pages/Chat';
 import Main from './Pages/Main';
-import socketIo from "socket.io-client";
 
 
 function App() {
