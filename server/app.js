@@ -9,6 +9,9 @@ import Message from "./models/message.model.js";
 
 mongoose.connect(process.env.DB, console.log("DB Connected"));
 
+const defaultRoom = 1223
+
+
 app.use(cors());
 
 app.get('/api/messages', async (req, res) => {
@@ -31,20 +34,12 @@ const io = new Server(server, {
 
 io.on('connection', (socket) => {
     socket.on('join_room', (data) => {
-        socket.join(data.room)
-        socket.to(data.room).emit('user_joined', data.pseudoname)
+        socket.join(defaultRoom)
+        socket.to(defaultRoom).emit('user_joined', data.pseudoname)
     })
 
     socket.on('send_message', (data) => {
-        console.log(data.pseudoname);
-        const message = new Message({
-            content: data.message,
-            room: data.room,
-            author: data.pseudoname
-        })
-
-        message.save()
-        socket.to(data.room).emit("recieve_message", data)
+        socket.to(defaultRoom).emit("recieve_message", data)
     })
 
     socket.on('disconnect', () => {
