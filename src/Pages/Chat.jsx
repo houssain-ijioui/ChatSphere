@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BsFillSendFill } from "react-icons/bs";
 import Message from '../components/Message';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
 const Chat = ({ pseudoname, joined, socket }) => {
   const [ currentMessage, setCurrentMessage ] = useState('');
   const [ messagesList, setMessageList ] = useState([]);
-  const [ joinedMessage, setJoinedMessage ] = useState(null);
 
 
   const getMessages = async () => {
@@ -36,7 +37,7 @@ const Chat = ({ pseudoname, joined, socket }) => {
             setMessageList((list) => [...list, data])
         })
         socket.on('user_joined', (pseudoname) => {
-            setJoinedMessage(`${pseudoname} joined`)
+          toast(`${pseudoname} joined`)
         })
         getMessages()
     }, [socket, joined])
@@ -44,9 +45,9 @@ const Chat = ({ pseudoname, joined, socket }) => {
 
   
   return (
-    <div className='shadow-2xl w-8/12 h-full m-auto mt-10 flex flex-col items-center justify-between pt-5'>
-        <div className='w-11/12 flex flex-col max-h-96 overflow-y-auto pt-4 rounded-lg'>
-            {joinedMessage ? <h1>{joinedMessage}</h1> : ''}
+    <>
+      <div className='shadow-2xl w-8/12 h-full m-auto mt-10 flex flex-col items-center justify-between pt-5'>
+        <div className='w-11/12 flex flex-col max-h-96 overflow-y-auto pt-4 pr-4 rounded-lg'>
             {messagesList.map((m, index) => {
                 return <Message key={index} content={m.content} author={m.author} createdAt={m.createdAt} pseudoname={pseudoname} />
             })}
@@ -57,7 +58,8 @@ const Chat = ({ pseudoname, joined, socket }) => {
               <BsFillSendFill className='m-auto text-lg' />
             </button>
         </div>
-    </div>
+      </div>
+    </>
   )
 }
 
