@@ -4,10 +4,19 @@ import express from "express";
 const app = express();
 import { Server } from "socket.io";
 import mongoose from "mongoose";
-
+import cors from "cors";
+import Message from "./models/message.model.js";
 
 mongoose.connect(process.env.DB, console.log("DB Connected"));
 
+const defaultRoom = 1223
+
+app.use(cors());
+
+app.get('/api/messages', async (req, res) => {
+    const messages = await Message.find();
+    res.send(messages)
+})
 
 const server = app.listen(4000, () => {
     console.log("Running On 4000");
@@ -23,15 +32,18 @@ const io = new Server(server, {
 })
 
 io.on('connection', (socket) => {
-    console.log("connected", socket.id);
-
     socket.on('join_room', (data) => {
-        socket.join(data.room)
-        console.log(`User ${data.pseudoname} with id ${socket.id} joined room ${data.room}`);
+        socket.join(defaultRoom)
+        socket.to(defaultRoom).emit('user_joined', data.pseudoname)
     })
 
     socket.on('send_message', (data) => {
-        socket.to(data.room).emit("recieve_message", data)
+        const message = new Message({
+            content: data.content,
+            author: data.author
+        })
+        message.save()
+        socket.to(defaultRoom).emit("recieve_message", data)
     })
 
     socket.on('disconnect', () => {

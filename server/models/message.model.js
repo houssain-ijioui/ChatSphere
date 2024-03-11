@@ -6,14 +6,12 @@ const messageSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    autor: {
-        type: String,
-        required: true
-    },
-    room: {
+    author: {
         type: String,
         required: true
     }
+}, {
+    timestamps: true
 })
 
 
