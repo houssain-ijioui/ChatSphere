@@ -11,7 +11,6 @@ mongoose.connect(process.env.DB, console.log("DB Connected"));
 
 const defaultRoom = 1223
 
-
 app.use(cors());
 
 app.get('/api/messages', async (req, res) => {
@@ -39,6 +38,11 @@ io.on('connection', (socket) => {
     })
 
     socket.on('send_message', (data) => {
+        const message = new Message({
+            content: data.content,
+            author: data.author
+        })
+        message.save()
         socket.to(defaultRoom).emit("recieve_message", data)
     })
 
