@@ -8,10 +8,6 @@ A real-time chat application built with React, Express, Socket.IO, and MongoDB.
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
-- [Usage](#usage)
-- [Technologies](#technologies)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 
