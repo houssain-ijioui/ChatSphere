@@ -1,9 +1,15 @@
+import './App.css';
+import { Routes, Route } from 'react-router-dom';
+import Join from './Pages/Join';
+import Main from './Pages/Main';
 
 
 function App() {
-
   return (
-    <h1>Chat App with React Node SocketIo</h1>
+    <Routes>
+      <Route path='/' element={<Main />} />
+      <Route path='/chat' element={<Join />} />
+    </Routes>
   )
 }
 
